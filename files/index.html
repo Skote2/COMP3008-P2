@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<HEAD lang="en-CA">
+    <meta charset="UTF-8">
+    <meta name="description" content="Screwey authentication model testing system">
+    <meta name="author" content="David N. Zilio">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Authentication test system</title>
+    <script src="./code.js"></script>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+</HEAD>
+<BODY>
+    <div id="progressTracker">
+        <h2>Stage</h2>
+        <ul>
+            <li> Setting Passwords
+                <ol>
+                    <li>Mail</li>
+                    <li>Bank</li>
+                    <li>Shop</li>
+                </ol>
+            </li>
+            <li> Authenticating
+                <ol>
+                    <li>Mail</li>
+                    <li>Bank</li>
+                    <li>Shop</li>
+                </ol>
+            </li>
+        </ul>
+    </div>
+    <div id="mainBody">
+        <div id="infoHeader">
+            <h1>Fruity authenticator</h1>
+            <p id="para1">This thing</p>
+        </div>
+        <div id="PassBox">
+            <form action="javascript:submit()">
+                <p>Would you like to begin?</p>
+                <input id="password" type="password" required="true" placeholder="Passphrase" />
+                <input class="button" type="submit" value="Submit" />
+            </form>
+        </div>
+    </div>
+</BODY>

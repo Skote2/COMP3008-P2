@@ -1,0 +1,16 @@
+{
+  "name": "passwordthing",
+  "version": "1.0.0",
+  "description": "COMP 3008 W18 A2 P2",
+  "main": "Server.js",
+  "dependencies": {
+    "express": "^4.16.3",
+    "npm": "^5.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "Server.js"
+  },
+  "author": "David N. Zilio",
+  "license": "ISC"
+}
