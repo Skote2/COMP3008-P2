@@ -5,6 +5,7 @@
   "main": "Server.js",
   "dependencies": {
     "express": "^4.16.3",
+    "mime-types": "^2.1.18",
     "npm": "^5.8.0"
   },
   "devDependencies": {},
