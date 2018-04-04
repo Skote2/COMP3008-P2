@@ -16,7 +16,7 @@ var retryBtn;
 var submitBtn;
 var passBox;
 var attempts = 0;
-
+var log = "The log is currently not being collected and needs to be implemented";
 
 //on document ready
 document.addEventListener('DOMContentLoaded', function(){ 
@@ -67,7 +67,7 @@ var reRoll = () => {
 var submit = () => {
     if (passBox.value == userKeys[state])
     {
-        instructLbl.innerHTML = "Congrats, you got it right!\n" + userKeys[state];
+        instructLbl.innerHTML = "Congrats, you got it right!\n" + userKeys[state] + '\n' + attempts + "/3";
         attempts++;
     }
     else
@@ -100,6 +100,12 @@ var next = () => {
             userKeys[state] = genKey();
             instructLbl.innerHTML = "Your passkey for " + state + " is set to: " + userKeys[state];
         }
+        else if (state == "bank")
+        {
+            state = "shop";
+            userKeys[state] = genKey();
+            instructLbl.innerHTML = "Your passkey for " + state + " is set to: " + userKeys[state];
+        }
         else if (state == "shop")
         {
             authenticating = true;
@@ -111,10 +117,14 @@ var next = () => {
         {
             state = "bank";
         }
+        else if (state == "bank")
+        {
+            state = "shop";
+        }
         else if (state == "shop")
         {
-            authenticating = true;
-            state = "mail";
+            state = "-1";
+            sendData(log);
         }
     }
 
