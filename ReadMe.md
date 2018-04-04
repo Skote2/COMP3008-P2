@@ -23,6 +23,8 @@ This is a NodeJS application developed on:
 * NodeJS version 8.10.0
 * npm version 5.8.0
 
-install everything above run "npm install" then "npm test" and connect to http://localhost:8080/" on Firefox to access
+install everything above run "npm install" then "npm test" and connect to 
+![localhost on port 8080](http://localhost:8080/)
+ on Firefox to access
 
 This application's purpose is to test a password scheme
