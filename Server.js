@@ -21,7 +21,8 @@ var writeLog = function(data) {
             console.log(err);
             console.log("Have you configured and created the Logs folder yet?");
         }
-        console.log("The log file was successfully written!");
+        else
+            console.log("The log file was successfully written!");
     });
 };
 //handles file reading and send responses of basic html reqs
