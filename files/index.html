@@ -32,13 +32,15 @@
     <div id="mainBody">
         <div id="infoHeader">
             <h1>Fruity authenticator</h1>
-            <p id="para1">This thing</p>
+            <p id="para1"></p>
         </div>
         <div id="PassBox">
             <form action="javascript:submit()">
-                <p>Would you like to begin?</p>
-                <input id="password" type="password" required="true" placeholder="Passphrase" />
-                <input class="button" type="submit" value="Submit" />
+                <p id="instructLbl">Would you like to begin?</p>
+                <input id="nextBtn" class="button" type="button" value="Begin" onclick="next()" />
+                <input id="retryBtn" class="button" type="button" value="" onclick="reRoll()" disabled /><br/>
+                <input id="password" type="password" required="true" placeholder="Passphrase" disabled />
+                <input id="submitBtn" class="button" type="submit" value="" disabled />
             </form>
         </div>
     </div>
