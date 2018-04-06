@@ -2,7 +2,7 @@
   "name": "passwordthing",
   "version": "1.0.0",
   "description": "COMP 3008 W18 A2 P2",
-  "main": "Server.js",
+  "main": "node Server.js",
   "dependencies": {
     "express": "^4.16.3",
     "mime-types": "^2.1.18",
@@ -10,8 +10,9 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "Server.js"
+    "test": "node Server.js"
   },
   "author": "David N. Zilio",
-  "license": "ISC"
+  "license": "ISC",
+  "url": "https://github.com/Skote2/COMP3008-P2/"
 }

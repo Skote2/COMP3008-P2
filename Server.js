@@ -9,14 +9,11 @@ const logsDir   = "./Logs"
 
 //utility function for writing logs
 var writeLog = function(data) {
-    console.log("Writting data to ");
-
-    var jsonString = JSON.stringify(data);
     var date = new Date();
     var dateString = date.toString().substring(0, date.toString().indexOf("(")-1).split(" ").join("-").replace(':', 'H').replace(':', 'M');//gives you a nicely formatted dated database
-    var fileName = logsDir + "/UserLog " + dateString + ".json";
+    var fileName = logsDir + "/UserLog " + dateString + ".txt";
 
-    fs.writeFile(fileName, jsonString, function(err) {
+    fs.writeFile(fileName, data.log, function(err) {
         if(err) {
             console.log(err);
             console.log("Have you configured and created the Logs folder yet?");
@@ -64,4 +61,4 @@ app.post('/authenticate', (req, res) => {
 
 })
 
-app.listen(PORT, () => console.log('Example app listening on port ' + PORT + '!'))
+app.listen(PORT, () => console.log('App listening on port ' + PORT + '!'))

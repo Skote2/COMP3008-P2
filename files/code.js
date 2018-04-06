@@ -15,8 +15,47 @@ var nextBtn;
 var retryBtn;
 var submitBtn;
 var passBox;
-var attempts = 0;
-var log = "The log is currently not being collected and needs to be implemented";
+var logBtn;
+var logP;
+var succAttempts = 0;
+var totAttempts = 0;
+
+//Log object constructor for user tracking
+function Log() {
+    var d = new Date();
+    this.entry      = d.toString().substring(0, 33) + "\n---------------------------------\n";
+    this.send       = function () { sendData({ log:this.entry }); };
+    this.logEvent   = function () { 
+        var line = "";
+        var date = new Date();
+
+        line = date.toString().substring(0, 33) + ": ";
+        if (authenticating)
+            line += "Authentication - ";
+        else
+            line += "Passkey trial  - ";
+        
+        line += state + " - attempt #" + totAttempts + '(' + succAttempts + "/3) - ";
+
+        if (passBox.value == userKeys[state])
+            line += "Successful\n"
+        else
+            line += "Failed\n"
+
+        this.entry += line;
+
+        updateLog(this.entry);
+    };
+}
+var log = new Log();
+
+var updateLog = (text) => {
+    s = text;
+    while (s.indexOf('\n') != -1)
+        s = s.replace('\n', "<br/>");
+
+    logP.innerHTML = s;
+}
 
 //on document ready
 document.addEventListener('DOMContentLoaded', function(){ 
@@ -24,17 +63,13 @@ document.addEventListener('DOMContentLoaded', function(){
     nextBtn     = document.getElementById("nextBtn");
     retryBtn    = document.getElementById("retryBtn");
     submitBtn   = document.getElementById("submitBtn");
+    logBtn      = document.getElementById("logBtn");
     passBox     = document.getElementById("password");
+    logP        = document.getElementById("logP");
 }, false);
 
 var sendData = (data) => {
-    pass = document.getElementById("password").value;
-
-    var pkg = {};
-    pkg.pass = pass;
-    pkgString = JSON.stringify(pkg);
-
-    console.log(pkgString);
+    pkgString = JSON.stringify(data);
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -61,31 +96,68 @@ var genKey = () => {
 var reRoll = () => {
     userKeys[state] = genKey();
     instructLbl.innerHTML = "Your " + state + " passkey has been set to: " + userKeys[state];
-    attempts = 0;
+    succAttempts = 0;
 }
 
 var submit = () => {
-    if (passBox.value == userKeys[state])
+    log.logEvent();
+    var authorized = (passBox.value == userKeys[state]);
+    
+    totAttempts++;
+    if (authenticating)
     {
-        instructLbl.innerHTML = "Congrats, you got it right!\n" + userKeys[state] + '\n' + attempts + "/3";
-        attempts++;
+        if (authorized)
+        {
+            succAttempts++;
+            instructLbl.innerHTML = "Congrats, you remembered it!\n" + succAttempts + "/3";
+        }
+        else
+            instructLbl.innerHTML = "That's not quite right :/\n" + succAttempts + "/3";
+        
+        if (totAttempts >= 3)
+        {
+            instructLbl.innerHTML += " - No more attempts."
+            nextBtn.disabled = false;
+            submitBtn.disabled = true;
+        }
     }
     else
-        instructLbl.innerHTML = "That's not quite right :/\n" + userKeys[state] + '\n' + attempts + "/3";
-    
-    if (attempts >= 3)
-        nextBtn.disabled = false;
+    {
+        if (authorized)
+        {
+            succAttempts++;
+            instructLbl.innerHTML = "Congrats, you got it right!\n" + userKeys[state] + '\n' + succAttempts + "/3";
+        }
+        else
+            instructLbl.innerHTML = "That's not quite right :/\n" + userKeys[state] + '\n' + succAttempts + "/3";
+        
+        if (succAttempts >= 3)
+            nextBtn.disabled = false;
+    }
+}
+
+var setInstruct = () => {
+    if (state == -1)
+        instructLbl.innerHTML = "You've completed the process and the log has been sent.";
+    else {
+        if (!authenticating)
+            instructLbl.innerHTML = "Your passkey for " + state + " is set to: " + userKeys[state];
+        else
+            instructLbl.innerHTML = "Please attempt to authenticate with the " + state + " passkey.";
+    }
 }
 
 var next = () => {
-    attempts = 0;
+    succAttempts = 0;
+    totAttempts = 0;
     nextBtn.disabled = true;
+    submitBtn.disabled = false;
     if (!authenticating) {//Therefor setting
         if (state == -1)
         {
             state = "mail";
             userKeys[state] = genKey();
-            instructLbl.innerHTML = "Your passkey for " + state + " is set to: " + userKeys[state];
+            setInstruct();
 
             passBox.disabled = false;
             retryBtn.disabled = false;
@@ -98,33 +170,38 @@ var next = () => {
         {
             state = "bank";
             userKeys[state] = genKey();
-            instructLbl.innerHTML = "Your passkey for " + state + " is set to: " + userKeys[state];
+            setInstruct();
         }
         else if (state == "bank")
         {
             state = "shop";
             userKeys[state] = genKey();
-            instructLbl.innerHTML = "Your passkey for " + state + " is set to: " + userKeys[state];
+            setInstruct();
         }
         else if (state == "shop")
         {
             authenticating = true;
             state = "mail";
+            setInstruct();
         }
     }
-    else {
+    else {//authenticating
         if (state == "mail")
         {
             state = "bank";
+            setInstruct();
         }
         else if (state == "bank")
         {
             state = "shop";
+            setInstruct();
         }
         else if (state == "shop")
         {
+            submitBtn.disabled = true;
             state = "-1";
-            sendData(log);
+            setInstruct();
+            log.send();
         }
     }
 
@@ -157,4 +234,17 @@ var setStage = () => {
     s += "</ul>";
 
     document.getElementById("progressTracker").innerHTML = s;
+}
+
+var showLog = () => {
+    if (logP.style.visibility === "visible")
+    {
+        logBtn.value = "Show Log";
+        logP.style.visibility = "hidden";
+    }
+    else
+    {
+        logBtn.value = "Hide Log";
+        logP.style.visibility = "visible";
+    }
 }
